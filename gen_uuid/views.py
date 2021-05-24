@@ -14,7 +14,10 @@ def gen_uuid(request):
     new_random_uuid = UUID(timestamp=str(datetime.datetime.now()), uuid=str(uuid.uuid4()))
     new_random_uuid.save()
 
-    uuids = UUID.objects.all()
-    serializer = UUIDSerializer(uuids, many=True)
+    uuids = UUID.objects.all().filter().order_by('-id')
+    uuids_dict = {}
+    
+    for i in uuids:
+        uuids_dict.update({i.timestamp:i.uuid})
 
-    return Response(serializer.data)
+    return Response(uuids_dict)
